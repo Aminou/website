@@ -15,7 +15,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'firstname', 'lastname', 'email', 'password',
+    ];
+
+    protected static $status = [
+        'active' => 1,
+        'disable' => 0
+    ];
+
+    protected static $type = [
+        'admin' => 'admin',
+        'visitor' => 'visitor',
+        'headhunter' => 'headhunter'
     ];
 
     /**
@@ -24,6 +35,74 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
+
+
+    /*
+     * Checks
+     */
+
+    public function isAdmin()
+    {
+        return $this->type === 'admin';
+    }
+
+    public function isActive()
+    {
+        return $this->active === self::$status['active'];
+    }
+
+    public function isHeadHunter()
+    {
+        return $this->type === self::$type['headhunter'];
+    }
+
+    public function isVisitor()
+    {
+        return $this->type === self::type['visitor'];
+    }
+
+    /*
+     * Scopes
+     */
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', self::$status['active']);
+    }
+
+    public function scopeDisable($query)
+    {
+        return $query->where('active', self::$status['disable']);
+    }
+
+    public function scopeAdmins($query)
+    {
+        return $query->where('type', self::$type['admin']);
+    }
+
+    public function scopeHeadHunters($query)
+    {
+        return $query->where('type', self::$type['headhunter']);
+    }
+
+    public function scopeVisitors($query)
+    {
+        return $query->where('type', self::$type['visitor']);
+    }
+
+    /*
+     * Attributes
+     */
+
+    public function getFullAddressAttribute()
+    {
+        return $this->address . ', ' . $this->city . ', ' . $this->postcode;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
 }

@@ -14,7 +14,8 @@ class UsersSeeder extends Seeder
     {
         $this->myAccount();
 
-        factory(User::class, 100);
+        factory(User::class, 100)->create();
+        factory(User::class, 'headhunter', 50)->create();
     }
 
     public function myAccount() {
@@ -22,6 +23,11 @@ class UsersSeeder extends Seeder
            'firstname' => 'Amine',
            'lastname' => 'Bendib',
            'email' => 'abendib@gmail.com',
+           'job_title' => 'PHP Developer',
+           'address' => '19, rue de Rocroy',
+           'postcode' => '75010',
+           'phone' => '0675668136',
+           'city' => 'Paris',
            'password' => bcrypt('nazim09'),
            'type' => 'admin',
            'active' => 1

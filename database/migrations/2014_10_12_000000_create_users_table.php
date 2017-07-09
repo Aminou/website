@@ -19,7 +19,13 @@ class CreateUsersTable extends Migration
             $table->string('lastname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('type', ['admin', 'regular', 'friend']);
+            $table->string('address')->nullable();
+            $table->string('postcode')->nullable();
+            $table->string('city')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('image')->nullable();
+            $table->string('job_title')->nullable();
+            $table->enum('type', ['admin', 'visitor', 'headhunter']);
             $table->unsignedTinyInteger('active');
             $table->rememberToken();
             $table->timestamps();
