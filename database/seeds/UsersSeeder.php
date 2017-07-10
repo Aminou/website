@@ -10,7 +10,7 @@ class UsersSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run() : void
     {
         $this->myAccount();
 
@@ -18,7 +18,8 @@ class UsersSeeder extends Seeder
         factory(User::class, 'headhunter', 50)->create();
     }
 
-    public function myAccount() {
+    public function myAccount() : void
+    {
         factory(User::class)->create([
            'firstname' => 'Amine',
            'lastname' => 'Bendib',

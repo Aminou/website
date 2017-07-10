@@ -19,7 +19,7 @@ class CreateSkillTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->enum('type', ['php', 'js', 'html', 'css', 'server', 'tools', 'workflow']);
-
+            $table->unsignedTinyInteger('active');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

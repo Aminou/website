@@ -15,6 +15,7 @@ readme.md
 bootstrap/cache/services.php
 
 composer.lock
-
+_ide_helper.php
+.phpstorm.meta.php
 package.json
 phpunit.phar

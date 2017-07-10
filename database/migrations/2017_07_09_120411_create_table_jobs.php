@@ -21,6 +21,7 @@ class CreateTableJobs extends Migration
             $table->string('title')->nullable();
             $table->string('job_title')->nullable();
             $table->text('description')->nullable();
+            $table->string('url')->nullable();
             $table->string('start_date');
             $table->string('end_date');
 
