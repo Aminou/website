@@ -33,3 +33,39 @@ $factory->define(App\User::class, function() use ($factory) {
         'type' => 'admin'
     ]);
 }, 'admins');
+
+
+$factory->define(App\Post::class, function(Faker\Generator $faker) {
+    $title = $faker->sentence;
+
+    return [
+        'title' => $title,
+        'body' => $faker->paragraph(6),
+        'active' => $faker->numberBetween(0, 1),
+        'slug' => str_slug($title)
+    ];
+});
+
+
+$factory->define(App\Job::class, function(Faker\Generator $faker) {
+    $title = $faker->sentence;
+
+    return [
+        'title' => $title,
+        'body' => $faker->paragraph(6),
+        'active' => $faker->numberBetween(0, 1),
+        'slug' => str_slug($title)
+    ];
+});
+
+
+$factory->define(App\Skill::class, function(Faker\Generator $faker) {
+    $title = $faker->sentence;
+
+    return [
+        'title' => $title,
+        'body' => $faker->paragraph(6),
+        'active' => $faker->numberBetween(0, 1),
+        'slug' => str_slug($title)
+    ];
+});

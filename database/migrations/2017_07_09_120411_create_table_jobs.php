@@ -15,6 +15,7 @@ class CreateTableJobs extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedSmallInteger('user_id');
             $table->enum('type', ['freelance', 'contract', 'cdi']);
             $table->string('slug')->nullable();
             $table->string('company')->nullable();
@@ -25,7 +26,7 @@ class CreateTableJobs extends Migration
             $table->string('start_date');
             $table->string('end_date');
 
-            $table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

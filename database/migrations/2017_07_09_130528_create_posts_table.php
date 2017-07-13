@@ -15,14 +15,14 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
-
+            $table->unsignedSmallInteger('user_id');
             $table->string('slug')->nullable();
             $table->string('title');
-            $table->text('content')->nullable();
+            $table->text('body')->nullable();
             $table->unsignedTinyInteger('active');
 
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('user_id')->references('id')->on('users');
         });
     }
 
