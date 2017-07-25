@@ -7,9 +7,10 @@ Route::get('/', 'HomeController@index');
 
 Route::group(['prefix' => 'users'], function() {
    Route::get('/', 'UserController@index');
-   Route::get('/{user}', 'UserController@show');
+
 
    Route::group(['middleware' => 'auth'], function() {
+       Route::get('/{user}', 'UserController@show');
        Route::post('/create', 'UserController@create');
        Route::get('/update/{user}', 'UserController@update');
        Route::post('/update/{user}', 'UserController@update');

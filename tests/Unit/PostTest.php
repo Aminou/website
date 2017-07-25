@@ -18,6 +18,7 @@ class PostTest extends TestCase
 
         $this->user = factory(User::class)->create(['type' => 'admin']);
     }
+    
     public function test_if_a_user_can_create_post()
     {
         $this->be($this->user);

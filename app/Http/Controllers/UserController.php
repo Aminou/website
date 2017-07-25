@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Repositories\UsersRepo;
 use Illuminate\Http\Request;
-use View;
-use Auth;
 
 class UserController extends Controller
 {
@@ -23,34 +21,51 @@ class UserController extends Controller
 
     public function show($id)
     {
-        return $this->usersRepo->find($id);
+        $user = $this->getUserInfo($id);
+        if ($this->loggedUser()->can('view', $user)) {
+            return $user;
+        }
+
+        return $this->cantDoThis();
+    }
+
+
+    public function edit($id)
+    {
+        $user = $this->getUserInfo($id);
+        if ($this->loggedUser()->can('update', $user)) {
+            return $user;
+        }
+
     }
 
     public function update(Request $request, $id)
     {
-        $user = $this->usersRepo->find($id);
+        $user = $this->getUserInfo($id);
 
-        if (Auth::user()->can('update', $user)) {
-
-            if ($request->method() === 'POST') {
-                $update = $this->usersRepo->update($id, $request->toArray());
-            }
-
-            return $user;
+        if ($this->loggedUser()->can('update', $user)) {
+            $this->usersRepo->update($id, $request->toArray());
+            return 'update successful';
         }
 
-        dd('oops');
-        //return View::make('users.update', compact($user));
+        return $this->cantDoThis();
     }
 
     public function delete($id)
     {
-        $user = $this->usersRepo->find($id);
+        $user = $this->getUserInfo($id);
 
-        if (Auth::user()->can('delete', $user)) {
+        if ($this->loggedUser()->can('delete', $user)) {
             return $this->usersRepo->delete($id);
         }
     }
 
+    /**
+     * @param $id
+     */
+    private function getUserInfo($id)
+    {
+        return $this->usersRepo->find($id);
+    }
 
 }

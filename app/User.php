@@ -41,9 +41,17 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        if ($this->isAdmin()) {
+            return $this->hasMany(Post::class);
+        }
     }
 
+    public function skills()
+    {
+        if ($this->isAdmin()) {
+            return $this->hasMany(Skill::class);
+        }
+    }
 
     /*
      * Checks
@@ -51,12 +59,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->type === 'admin';
-    }
-
-    public function isActive()
-    {
-        return $this->active === self::$status['active'];
+        return $this->type === self::$type['admin'];
     }
 
     public function isHeadHunter()
@@ -66,7 +69,12 @@ class User extends Authenticatable
 
     public function isVisitor()
     {
-        return $this->type === self::type['visitor'];
+        return $this->type === self::$type['visitor'];
+    }
+
+    public function isActive()
+    {
+        return $this->active === self::$status['active'];
     }
 
     /*

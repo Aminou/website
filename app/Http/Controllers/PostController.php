@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Repositories\PostsRepo;
 use Response;
-use Auth;
 
 class PostController extends Controller
 {
@@ -44,11 +43,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->can('create', Post::class)) {
+        if ($this->loggedUser()->can('create', Post::class)) {
             return $this->repo->create($request->toArray());
         }
 
-        return Response::json(['error' => 'you dont have permissions to do this'], 400);
+        return $this->cantDoThis();
     }
 
     /**

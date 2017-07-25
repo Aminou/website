@@ -14,4 +14,9 @@ class Skill extends Model
     protected $fillable = [
         'firstname', 'lastname', 'email', 'password',
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
