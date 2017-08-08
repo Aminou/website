@@ -79,7 +79,7 @@ class BaseRepository
      * @return mixed
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function update($id, array $data)
+    public function update($id, array $data = [])
     {
         return $this->find($id)->update($data);
     }

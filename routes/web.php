@@ -2,12 +2,11 @@
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index');
-
+Route::get('/', 'PostController@index');
 
 Route::group(['prefix' => 'users'], function() {
-   Route::get('/', 'UserController@index');
 
+   Route::get('/', 'UserController@index');
 
    Route::group(['middleware' => 'auth'], function() {
        Route::get('/{user}', 'UserController@show');

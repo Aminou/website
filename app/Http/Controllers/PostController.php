@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\PostsRepo;
-use Response;
+use View;
 
 class PostController extends Controller
 {
@@ -22,7 +22,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        return $this->repo->all();
+        $this->setTitle('Home');
+
+        $this->data['posts'] = $this->repo->query()->live()->get();
+        return View::make('home', $this->data);
     }
 
     /**

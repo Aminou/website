@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Skill extends Model
+class Skill extends BaseModel
 {
     /**
      * The attributes that are mass assignable.

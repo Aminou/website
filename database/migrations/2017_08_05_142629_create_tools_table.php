@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostsTable extends Migration
+class CreateToolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,13 @@ class CreatePostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('tools', function (Blueprint $table) {
+            $table->tinyIncrements('id');
             $table->unsignedSmallInteger('user_id');
-            $table->string('slug')->nullable();
             $table->string('title');
-            $table->text('body')->nullable();
+            $table->text('description');
             $table->unsignedTinyInteger('active');
-            $table->timestamp('published_at')->nullable();
-
             $table->timestamps();
-            //$table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -34,6 +30,6 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('tools');
     }
 }

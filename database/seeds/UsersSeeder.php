@@ -12,13 +12,39 @@ class UsersSeeder extends Seeder
      */
     public function run() : void
     {
-        $this->myAccount();
-
-        factory(User::class, 100)->create();
-        factory(User::class, 'headhunter', 50)->create();
+        $this->createMyAccount();
+        $this->createAdminAccounts();
+        $this->createDisabledAccounts(50);
+        $this->createHeadHunters(10);
+        $this->createRegularAccounts(101);
     }
 
-    public function myAccount() : void
+    public function createRegularAccounts(int $number = 100) : void
+    {
+        factory(User::class, $number)->create();
+    }
+
+    public function createHeadHunters(int $number = 50) : void
+    {
+        factory(User::class, $number)->create([
+            'type' => 'headhunter'
+        ]);
+    }
+
+    public function createAdminAccounts(int $number = 2) : void
+    {
+        factory(User::class, $number)->create([
+            'type' => 'admin'
+        ]);
+    }
+
+    public function createDisabledAccounts(int $number = 30) : void
+    {
+        factory(User::class, $number)->create([
+           'active' => 0
+        ]);
+    }
+    public function createMyAccount() : void
     {
         factory(User::class)->create([
            'firstname' => 'Amine',

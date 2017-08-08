@@ -18,10 +18,11 @@ class CreateSkillTable extends Migration
             $table->unsignedSmallInteger('user_id');
             $table->string('slug');
             $table->string('title');
-            $table->string('description');
-            $table->enum('type', ['php', 'js', 'html', 'css', 'server', 'tools', 'workflow']);
+            $table->text('description');
+            $table->enum('type', ['php', 'js', 'html', 'css', 'server']);
             $table->unsignedTinyInteger('active');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
         });
     }
 
