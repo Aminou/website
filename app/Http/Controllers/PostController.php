@@ -24,7 +24,7 @@ class PostController extends Controller
     {
         $this->setTitle('Home');
 
-        $this->data['posts'] = $this->repo->query()->live()->get();
+        $this->data['posts'] = $this->repo->query()->live()->orderBy('published_at', 'DESC')->get();
         return View::make('home', $this->data);
     }
 

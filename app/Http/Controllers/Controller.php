@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Auth;
 use App\User;
+use View;
 
 class Controller extends BaseController
 {
@@ -40,6 +41,11 @@ class Controller extends BaseController
     public function setDescription($description = '') : void
     {
         $this->data['description'] = $description;
+    }
+
+    public function view($viewName)
+    {
+        return View::make($viewName, $this->data);
     }
 
 }

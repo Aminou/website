@@ -57,6 +57,11 @@ class User extends BaseModel implements
         return $this->hasMany(Job::class);
     }
 
+    public function tools()
+    {
+        return $this->hasMany(Tool::class);
+    }
+
     /*
      * Checks
      */
@@ -85,9 +90,15 @@ class User extends BaseModel implements
      * Scopes
      */
 
-    public function scopeAdmins($query)
+    public function scopeAdmins($query, $result = false)
     {
-        return $query->where('type', self::$type['admin']);
+        $builder = $query->where('type', self::$type['admin']);
+
+        if ($result) {
+            return $builder->get();
+        }
+
+        return $builder;
     }
 
     public function scopeHeadHunters($query)

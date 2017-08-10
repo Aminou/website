@@ -31,3 +31,9 @@ Route::group(['prefix' => 'posts'], function() {
 
 });
 
+Route::group(['prefix' => 'jobs'], function() {
+   Route::get('/', 'JobController@index');
+
+   Route::get('/{job}', 'JobController@show');
+});
+

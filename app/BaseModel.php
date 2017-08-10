@@ -25,4 +25,18 @@ class BaseModel extends Model
     {
         return $query->where('active', self::$status['disabled']);
     }
+
+    public function activate()
+    {
+        $this->active = self::$status['active'];
+
+        return $this->save();
+    }
+
+    public function disable()
+    {
+        $this->active = self::$status['disabled'];
+
+        return $this->save();
+    }
 }

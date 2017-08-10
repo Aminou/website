@@ -13,6 +13,11 @@ class Job extends BaseModel
         'firstname', 'lastname', 'email', 'password',
     ];
 
+    protected $dates = [
+        'start_date',
+        'end_date'
+    ];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');

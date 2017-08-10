@@ -3,9 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\JobsRepo;
+use View;
 
 class JobController extends Controller
 {
+
+    public function __construct(JobsRepo $repo)
+    {
+        $this->repo = $repo;
+        $this->setTitle('Jobs');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +22,8 @@ class JobController extends Controller
      */
     public function index()
     {
-        //
+        $this->data['jobs'] = $this->repo->all();
+        return View::make('jobs', $this->data);
     }
 
     /**
@@ -45,7 +55,11 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $this->data['job'] = $this->repo->find($id);
+        $this->setTitle($this->data['job']->slug);
+
+        return $this->view('job');
     }
 
     /**

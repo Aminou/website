@@ -11,4 +11,9 @@ class PostsRepo extends BaseRepository
         parent::__construct($model);
     }
 
+    public function publish($id)
+    {
+        return $this->find($id)->publish();
+    }
+
 }
