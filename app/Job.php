@@ -4,14 +4,6 @@ namespace App;
 
 class Job extends BaseModel
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'firstname', 'lastname', 'email', 'password',
-    ];
 
     protected $dates = [
         'start_date',

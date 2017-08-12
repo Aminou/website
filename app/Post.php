@@ -5,11 +5,10 @@ use Carbon\Carbon;
 
 class Post extends BaseModel
 {
-    protected $fillable = [
-        'title', 'body', 'user_id', 'active'
-    ];
 
-    protected $dates = ['published_at'];
+    protected $dates = [
+        'published_at'
+    ];
 
     public function author()
     {

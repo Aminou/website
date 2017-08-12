@@ -4,14 +4,6 @@ namespace App;
 
 class Skill extends BaseModel
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'firstname', 'lastname', 'email', 'password',
-    ];
 
     public function owner()
     {
