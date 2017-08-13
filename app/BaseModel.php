@@ -3,9 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Contracts\Activable;
+use App\Traits\Activable;
+use App\Contracts\Activable as ActiveContract;
 
-class BaseModel extends Model
+class BaseModel extends Model implements ActiveContract
 {
     use Activable;
 
