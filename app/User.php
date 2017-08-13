@@ -3,29 +3,13 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Contracts\Activable as ActiveContract;
+use App\Traits\Activable;
 
-class User extends BaseModel implements
-    AuthenticatableContract,
-    AuthorizableContract,
-    CanResetPasswordContract
+class User extends Authenticatable implements ActiveContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
-
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'firstname', 'lastname', 'email', 'password',
-    ];
+    use Notifiable, Activable;
 
     protected static $type = [
         'admin' => 'admin',
@@ -81,24 +65,13 @@ class User extends BaseModel implements
         return $this->type === self::$type['visitor'];
     }
 
-    public function isActive()
-    {
-        return $this->active === self::$status['active'];
-    }
-
     /*
      * Scopes
      */
 
-    public function scopeAdmins($query, $result = false)
+    public function scopeAdmins($query)
     {
-        $builder = $query->where('type', self::$type['admin']);
-
-        if ($result) {
-            return $builder->get();
-        }
-
-        return $builder;
+        return $query->where('type', self::$type['admin']);
     }
 
     public function scopeHeadHunters($query)
@@ -110,11 +83,6 @@ class User extends BaseModel implements
     {
         return $query->where('type', self::$type['visitor']);
     }
-
-    //public function scopeTest($query)
-    //{
-    //    return $this->scopeAdmins($query)->get();
-    //}
 
     /*
      * Attributes

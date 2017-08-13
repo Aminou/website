@@ -10,4 +10,6 @@ interface Activable
     public function activate();
 
     public function disable();
+
+    public function isActive();
 }

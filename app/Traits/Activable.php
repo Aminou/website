@@ -31,4 +31,9 @@ trait Activable
 
         return $this->save();
     }
+
+    public function isActive()
+    {
+        return $this->active === self::$status['active'];
+    }
 }
