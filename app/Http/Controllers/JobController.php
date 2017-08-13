@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\JobsRepo;
+use App\Job;
 use View;
 
 class JobController extends Controller
@@ -50,14 +51,13 @@ class JobController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Job  $job
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Job $job)
     {
-
-        $this->data['job'] = $this->repo->find($id);
-        $this->setTitle($this->data['job']->slug);
+        $this->data['job'] = $job;
+        $this->setTitle($job->slug);
 
         return $this->view('job');
     }

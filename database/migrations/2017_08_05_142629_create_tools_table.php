@@ -11,7 +11,7 @@ class CreateToolsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up() : void
     {
         Schema::create('tools', function (Blueprint $table) {
             $table->tinyIncrements('id');
@@ -28,7 +28,7 @@ class CreateToolsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down() : void
     {
         Schema::dropIfExists('tools');
     }

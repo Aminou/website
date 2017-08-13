@@ -37,3 +37,5 @@ Route::group(['prefix' => 'jobs'], function() {
    Route::get('/{job}', 'JobController@show');
 });
 
+Route::get('cv/{user}', 'CurriculumController@index');
+

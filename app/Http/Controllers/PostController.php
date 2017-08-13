@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\PostsRepo;
+use App\Post;
 use View;
 
 class PostController extends Controller
@@ -56,12 +57,12 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Post  $post
      * @return mixed
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        return $this->repo->find($id);
+        return $post;
     }
 
     /**
