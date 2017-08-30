@@ -19,9 +19,8 @@ class UserController extends Controller
         return $this->usersRepo->all();
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        $user = $this->getUserInfo($id);
         if ($this->loggedUser()->can('view', $user)) {
             return $user;
         }
@@ -30,42 +29,35 @@ class UserController extends Controller
     }
 
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = $this->getUserInfo($id);
+
         if ($this->loggedUser()->can('update', $user)) {
             return $user;
         }
 
+        return $this->cantDoThis();
+
     }
 
-    public function update(Request $request, $id)
+    public function update(User $user, Request $request)
     {
-        $user = $this->getUserInfo($id);
-
         if ($this->loggedUser()->can('update', $user)) {
-            $this->usersRepo->update($id, $request->toArray());
+            $user->update($request->toArray());
             return 'update successful';
         }
 
         return $this->cantDoThis();
     }
 
-    public function delete($id)
+    public function delete(User $user)
     {
-        $user = $this->getUserInfo($id);
 
         if ($this->loggedUser()->can('delete', $user)) {
-            return $this->usersRepo->delete($id);
+            return $user->delete();
         }
-    }
 
-    /**
-     * @param $id
-     */
-    private function getUserInfo($id)
-    {
-        return $this->usersRepo->find($id);
+        return $this->cantDoThis();
     }
 
 }

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Auth;
 use App\User;
 use View;
+use App\Exceptions\CantDoThisException;
 
 class Controller extends BaseController
 {
@@ -25,7 +26,7 @@ class Controller extends BaseController
 
     public function cantDoThis() : string
     {
-        return 'You can\'t do this.';
+        throw new CantDoThisException;
     }
 
     public function setUser() : void

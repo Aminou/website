@@ -3,6 +3,24 @@
 
 @section('content')
 
+    <section class="myself">
+
+        <h1>{{ $jobseeker->name }}</h1>
+
+        <p>
+            {{ $jobseeker->job_title }}
+        </p>
+
+        <div class="address">
+            {{ $jobseeker->address }}
+        </div>
+
+        <div class="coordonnees">
+            {{ $jobseeker->phone }}
+            {{ $jobseeker->email }}
+        </div>
+
+    </section>
 
 @if($jobs)
     <section class="jobs">

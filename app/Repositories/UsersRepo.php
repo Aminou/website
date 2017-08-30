@@ -13,13 +13,7 @@ class UsersRepo extends BaseRepository
 
     public function createUser($data)
     {
-        $user = $this->create($data);
-
-    /*    if (null !== $user) {
-            Event::fire('App\Event\UserWasCreated');
-        }
-    */
-        return $user;
+        return $this->create($data);
     }
 
 }
