@@ -55,7 +55,7 @@ class UsersSeeder extends Seeder
            'postcode' => '75010',
            'phone' => '0675668136',
            'city' => 'Paris',
-           'password' => bcrypt('nazim09'),
+           'password' => bcrypt('password'),
            'type' => 'admin',
            'active' => 1
         ]);
