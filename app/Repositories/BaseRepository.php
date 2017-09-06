@@ -19,7 +19,7 @@ class BaseRepository
     }
 
     /**
-     * Return fresh query on the model
+     * Returns a fresh query on the model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -96,6 +96,12 @@ class BaseRepository
     public function delete($id)
     {
         return $this->find($id)->delete();
+    }
+
+
+    public function getLastUpdate($id)
+    {
+        return $this->find($id)->updated_at->diffForHumans();
     }
 
     /**
