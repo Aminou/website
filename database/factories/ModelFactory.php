@@ -27,7 +27,9 @@ $factory->define(App\Post::class, function(Faker\Generator $faker) {
         'active' => $faker->numberBetween(0, 1),
         'slug' => str_slug($title),
         'published_at' => $faker->dateTime,
-        'user_id' => App\User::admins()->active()->get()->random()->id
+        'user_id' => function() {
+            return factory(App\User::class)->create()->id;
+        }
     ];
 });
 

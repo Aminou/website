@@ -10,6 +10,7 @@ use Auth;
 use App\User;
 use View;
 use App\Exceptions\CantDoThisException;
+use App\Exceptions\CouldNotDeleteException;
 
 class Controller extends BaseController
 {
@@ -22,11 +23,6 @@ class Controller extends BaseController
     protected function loggedUser() : User
     {
         return Auth::user();
-    }
-
-    public function cantDoThis() : string
-    {
-        throw new CantDoThisException;
     }
 
     public function setUser() : void
@@ -47,6 +43,16 @@ class Controller extends BaseController
     public function view($viewName)
     {
         return View::make($viewName, $this->data);
+    }
+
+    public function cantDoThis() : string
+    {
+        throw new CantDoThisException;
+    }
+
+    public function errorWhenTryingToDelete()
+    {
+        return new CouldNotDeleteException;
     }
 
 }

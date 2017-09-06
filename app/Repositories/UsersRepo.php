@@ -2,7 +2,6 @@
 namespace App\Repositories;
 
 use App\User;
-use Event;
 
 class UsersRepo extends BaseRepository
 {

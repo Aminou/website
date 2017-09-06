@@ -23,10 +23,15 @@ Route::group(['prefix' => 'posts'], function() {
    Route::get('/{post}', 'PostController@show');
 
    Route::group(['middleware' => 'auth'], function() {
+
        Route::get('/create', 'PostController@create');
        Route::post('/create', 'PostController@store');
+
        Route::get('/update/{post}', 'PostController@edit');
        Route::post('/update/{post}', 'PostController@update');
+
+       Route::post('publish/{post}', 'PostController@publish');
+       Route::post('unpublish/{post}', 'PostController@unpublish');
    });
 
 });
