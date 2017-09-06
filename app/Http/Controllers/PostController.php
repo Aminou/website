@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\PostsRepo;
 use App\Post;
 use View;
+use Auth;
 
 class PostController extends Controller
 {
@@ -80,22 +81,59 @@ class PostController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Post $post
      * @return mixed
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        return $this->repo->update($id, $request->toArray());
+
+        if ($this->loggedUser()->can('update', $post)) {
+            $update = $this->repo->update($post->getKey(), $request->toArray());
+
+            if ($update) {
+                return $post;
+            }
+        }
+
+        return $this->cantDoThis();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Post  $post
+     * @return mixed
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        if ($this->loggedUser()->can('delete', $post)) {
+
+            if ($this->repo->delete($post->getKey())) {
+                return 'deleted ' . $post->title;
+            }
+
+            return $this->errorWhenTryingToDelete();
+        }
+
+        return $this->cantDoThis();
+    }
+
+    public function unpublish($id)
+    {
+        if ($this->loggedUser()->can('unpublish')) {
+            return $this->repo->unpublish($id);
+        }
+
+        return $this->cantDoThis();
+    }
+
+    public function publish(Post $post)
+    {
+        if ($this->loggedUser()->can('publish', $post)) {
+            $this->repo->publish($post->getKey());
+            return $post;
+        }
+
+        return $this->cantDoThis();
     }
 }

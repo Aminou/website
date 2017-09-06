@@ -47,4 +47,22 @@ class PostPolicy
     {
         return $user->id === $post->user_id;
     }
+
+
+    /**
+     * @param User $user
+     * @param Post $post
+     */
+    public function publish(User $user, Post $post)
+    {
+        return $user->id === $post->user_id;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function unpublish(User $user)
+    {
+        return $user->isAdmin();
+    }
 }

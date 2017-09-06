@@ -10,6 +10,11 @@ class Post extends BaseModel
         'published_at'
     ];
 
+    //sqlite will cast the foreign key as a string by default (fails the policy owner test)
+    protected $casts = [
+      'user_id' => 'integer'
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id')->withDefault([
@@ -38,12 +43,4 @@ class Post extends BaseModel
     }
 
 
-    /* Actions */
-
-    public function publish()
-    {
-        $this->published_at = Carbon::now();
-
-        return $this->save();
-    }
 }
