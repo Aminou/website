@@ -32,17 +32,6 @@ class PostTest extends TestCase
     }
 
 
-    public function test_if_an_admin_can_create_a_post()
-    {
-        $user = $this->createNewLoggedInUser('admin');
-
-        $post = factory(Post::class)->raw(['user_id' => $user->id]);
-
-        $this->post('/posts/create', $post)
-             ->assertSee($post['title']);
-    }
-
-
     public function test_regular_user_cant_create_post()
     {
         $user = $this->createNewLoggedInUser();
