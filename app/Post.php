@@ -1,10 +1,13 @@
 <?php
 
 namespace App;
+use App\Traits\Filterable;
 use Carbon\Carbon;
 
 class Post extends BaseModel
 {
+
+    use Filterable;
 
     protected $dates = [
         'published_at'
@@ -40,6 +43,19 @@ class Post extends BaseModel
     public function scopeLive($query)
     {
         return $query->whereNotNull('published_at')->where('active', self::$status['active']);
+    }
+
+
+    /* utilities */
+
+    public function publishedDate()
+    {
+        return ucwords($this->published_at->formatLocalized('%d %B %Y'));
+    }
+
+    public function year()
+    {
+        return $this->published_at->year;
     }
 
 

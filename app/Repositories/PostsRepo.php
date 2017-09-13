@@ -12,6 +12,11 @@ class PostsRepo extends BaseRepository
         parent::__construct($model);
     }
 
+    public function filter($filter)
+    {
+        return $this->query()->filter($filter)->get();
+    }
+
     public function publish($id)
     {
         return $this->_updatePublishedState($id, Carbon::now());

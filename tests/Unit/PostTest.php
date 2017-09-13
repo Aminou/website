@@ -2,18 +2,20 @@
 
 namespace Tests\Unit;
 
+use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Post;
+use DB;
 
 class PostTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function createPost(\App\User $author = null)
+    protected function createPost($user_id)
     {
-        $params = (null !== $author) ? ['user_id' => $author->id] : [];
+        $params = (null !== $user_id) ? ['user_id' => $user_id] : [];
         return factory(Post::class)->create($params);
     }
 
@@ -21,11 +23,11 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser('admin');
 
-        $post = factory(Post::class)->make(['user_id' => $user->getKey()]);
+        $post = factory(Post::class)->raw(['user_id' => $user->getKey()]);
 
-        $this->post('/posts/create', $post->toArray());
+        $this->post('/posts/create', $post);
 
-        $this->assertDatabaseHas('posts', ['title' => $post->title]);
+        $this->assertDatabaseHas('posts', ['title' => $post['title']]);
 
     }
 
@@ -34,10 +36,10 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser('admin');
 
-        $post = factory(Post::class)->make(['user_id' => $user->id]);
+        $post = factory(Post::class)->raw(['user_id' => $user->id]);
 
-        $this->post('/posts/create', $post->toArray())
-             ->assertSee($post->title);
+        $this->post('/posts/create', $post)
+             ->assertSee($post['title']);
     }
 
 
@@ -45,10 +47,10 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser();
 
-        $post = factory(Post::class)->make(['user_id' => $user->getKey()]);
+        $post = factory(Post::class)->raw(['user_id' => $user->getKey()]);
 
         $this->expectException('App\Exceptions\CantDoThisException');
-        $this->post('/posts/create', $post->toArray());
+        $this->post('/posts/create', $post);
 
     }
 
@@ -89,10 +91,10 @@ class PostTest extends TestCase
     public function test_if_we_can_create_a_post_if_were_not_logged()
     {
         $user = factory('App\User')->create();
-        $post = factory(Post::class)->make(['user_id' => $user->id]);
+        $post = factory(Post::class)->raw(['user_id' => $user->id]);
 
         $this->expectException(AuthenticationException::class);
-        $this->post('/posts/create', $post->toArray());
+        $this->post('/posts/create', $post);
     }
 
 
@@ -109,6 +111,57 @@ class PostTest extends TestCase
 
         $published_post = Post::find($post->getKey());
         $this->assertTrue($published_post->isPublished());
+    }
+
+
+    public function test_filters_by_author_id()
+    {
+        $user = $this->createNewLoggedInUser();
+
+        $post = factory(Post::class, 10)->create([
+            'user_id' => $user->getKey(),
+            'active' => 1
+        ]);
+
+        $this->get('/posts/?by=' . $user->id)
+             ->assertSee($post->random()->title);
+    }
+
+    public function test_filter_by_year()
+    {
+        $date = Carbon::createFromDate(2015, random_int(1, 12), random_int(1, 12));
+
+        $posts = factory(Post::class, 10)->create([
+            'active' => 1,
+            'published_at' => $date
+        ]);
+
+        $this->get('/posts/?year=' . $date->year)
+            ->assertStatus(200)
+            ->assertSee($posts->random()->title);
+
+    }
+
+    public function test_cant_see_posts_filtered()
+    {
+        $date = Carbon::createFromDate(2015, random_int(1, 12), random_int(1,28));
+        $right_date = Carbon::createFromDate(2016, random_int(1, 12), random_int(1, 28));
+
+        $older_posts = factory(Post::class, 10)->create([
+            'active' => 1,
+            'published_at' => $date
+        ]);
+
+        $newer_posts = factory(Post::class, 10)->create([
+            'active' => 1,
+            'published_at' => $right_date
+        ]);
+
+        $this->get('/posts/?year=' . $right_date->year)
+             ->assertSee($newer_posts->random()->title)
+             ->assertDontSeeText($older_posts->random()->title);
+
+
     }
 
 }
