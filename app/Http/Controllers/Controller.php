@@ -25,17 +25,17 @@ class Controller extends BaseController
         return Auth::user();
     }
 
-    public function setUser() : void
+    protected function setUser() : void
     {
         $this->data['user'] = $this->loggedUser();
     }
 
-    public function setTitle($title) : void
+    protected function setTitle($title) : void
     {
         $this->data['title'] = $title;
     }
 
-    public function setDescription($description = '') : void
+    protected function setDescription($description = '') : void
     {
         $this->data['description'] = $description;
     }

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\PostsRepo;
+use App\Filters\PostFilters;
 use App\Post;
 use View;
-use Auth;
 
 class PostController extends Controller
 {
@@ -17,16 +17,10 @@ class PostController extends Controller
         $this->repo = $postsRepo;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return mixed
-     */
-    public function index()
+    public function index(PostFilters $filters)
     {
-        $this->setTitle('Home');
+        $this->data['posts'] = $this->repo->query()->live()->filter($filters)->get();
 
-        $this->data['posts'] = $this->repo->query()->live()->orderBy('published_at', 'DESC')->get();
         return View::make('home', $this->data);
     }
 
