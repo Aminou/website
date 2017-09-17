@@ -1,8 +1,8 @@
 <?php
 
 namespace App;
+
 use App\Traits\Filterable;
-use Carbon\Carbon;
 
 class Post extends BaseModel
 {
@@ -17,6 +17,11 @@ class Post extends BaseModel
     protected $casts = [
       'user_id' => 'integer'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function author()
     {

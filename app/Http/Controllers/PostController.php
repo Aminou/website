@@ -57,7 +57,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return $post;
+        $this->data['post'] = $post;
+        return $this->view('template.post');
     }
 
     /**
