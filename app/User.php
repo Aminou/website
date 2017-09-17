@@ -26,6 +26,8 @@ class User extends Authenticatable implements ActiveContract
         'password', 'remember_token'
     ];
 
+    protected $guarded = [];
+
     public function posts()
     {
         return $this->hasMany(Post::class);
