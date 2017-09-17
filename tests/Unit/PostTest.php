@@ -51,7 +51,7 @@ class PostTest extends TestCase
             'user_id' => $user->getKey()
         ]);
 
-        $this->post('/posts/update/' . $post->getKey(), [
+        $this->post('/posts/update/' . $post->slug, [
             'title' => 'updated title'
         ]);
 
@@ -72,7 +72,7 @@ class PostTest extends TestCase
 
         $this->expectException('App\Exceptions\CantDoThisException');
 
-        $this->post('/posts/update/' . $post->getKey(), [
+        $this->post('/posts/update/' . $post->slug, [
             'title' => 'updated title'
         ]);
     }
@@ -96,10 +96,9 @@ class PostTest extends TestCase
             'published_at' => null
         ]);
 
-        $this->post('/posts/publish/' . $post->getKey());
+        $this->post('/posts/publish/' . $post->slug);
 
-        $published_post = Post::find($post->getKey());
-        $this->assertTrue($published_post->isPublished());
+        $this->assertTrue($post->fresh()->isPublished());
     }
 
 
@@ -151,6 +150,30 @@ class PostTest extends TestCase
              ->assertDontSeeText($older_posts->random()->title);
 
 
+    }
+
+    public function test_multiple_post_filters()
+    {
+        $date = Carbon::createFromDate(2018, random_int(1,12), random_int(1,28));
+        $owner = $this->createNewLoggedInUser();
+        $wrong_date = Carbon::createFromDate(2016, random_int(1,12), random_int(1,28));
+        $posts = factory(Post::class, 10)->create([
+            'active' => 1,
+            'published_at' => $date,
+            'user_id' => $owner->id
+        ]);
+
+        $bad_post = factory(Post::class, 10)->create([
+           'active' => 1,
+           'published_at' => $wrong_date,
+           'user_id' => function () {
+                return factory('App\User')->create()->id;
+           }
+        ]);
+
+        $this->get('/posts/?year=' . $date->year . '&by=' . $owner->id)
+             ->assertSee($posts->random()->title)
+             ->assertDontSee($bad_post->random()->title);
     }
 
 }
