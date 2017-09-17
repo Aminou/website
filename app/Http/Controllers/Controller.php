@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use View;
+use App\Exceptions\CantDoThisException;
+use App\Exceptions\CouldNotDeleteException;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Auth;
-use App\User;
-use View;
-use App\Exceptions\CantDoThisException;
-use App\Exceptions\CouldNotDeleteException;
 
 class Controller extends BaseController
 {
@@ -20,7 +19,7 @@ class Controller extends BaseController
     protected $title;
     protected $user;
 
-    protected function loggedUser() : User
+    protected function loggedUser() : \App\User
     {
         return Auth::user();
     }
