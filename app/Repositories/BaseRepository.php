@@ -55,19 +55,12 @@ class BaseRepository
      * Create Model
      *
      * @param array $data     Data to create the model
-     * @param bool  $returnID set to true to return only the id.
      *
-     * @return mixed
+     * @return Model
      */
-    public function create(array $data, $returnID = false)
+    public function create(array $data)
     {
-        $new = $this->model->create($data);
-
-        if ($returnID) {
-            return $new->getKey();
-        }
-
-        return $new;
+        return $this->model->create($data);
     }
 
     /**
@@ -104,41 +97,4 @@ class BaseRepository
         return $this->find($id)->updated_at->diffForHumans();
     }
 
-    /**
-     * Disable the model
-     *
-     * @param int $id ID
-     *
-     * @return mixed
-     */
-    public function disable($id)
-    {
-        return $this->_setActiveStatus($id, 0);
-    }
-
-    /**
-     * Activate the model
-     *
-     * @param int $id ID
-     *
-     * @return mixed
-     */
-    public function activate($id)
-    {
-        return $this->_setActiveStatus($id, 1);
-    }
-
-    /**
-     * Change the active status
-     *
-     * @param int $id ID
-     * @param int $status 1 to activate, 0 to disable
-     *
-     * @return bool
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
-    private function _setActiveStatus($id, $status)
-    {
-        return $this->update($id, ['active' => $status]);
-    }
 }
