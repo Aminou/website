@@ -13,8 +13,13 @@ class JobTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function test_job_has_a_owner()
     {
-        $this->assertTrue(true);
+        $user = $this->createUser();
+
+        $job = factory('App\Job')->create(['user_id' => $user->id]);
+
+        $this->assertSame($job->id, $user->fresh()->jobs->first()->id);
+
     }
 }

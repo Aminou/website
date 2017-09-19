@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
@@ -35,4 +36,33 @@ class UserTest extends TestCase
            'id' => $user->getKey()
         ]);
     }
+
+    public function test_if_user_has_an_image()
+    {
+        $user = $this->createUser();
+
+        $image = factory('App\Document', 'avatar')->create([
+            'documentable_id' => $user->id,
+        ]);
+
+        $this->assertEquals($image->path, $user->fresh()->avatar->path);
+    }
+
+    public function test_if_a_user_is_activable()
+    {
+        $user = $this->createUser([
+           'active' => 0
+        ]);
+
+        $user->activate();
+
+        $this->assertTrue($user->fresh()->isActive());
+
+        $user->disable();
+
+        $this->assertFalse($user->fresh()->isActive());
+    }
+
+
+
 }
