@@ -7,13 +7,17 @@ Route::get('/', 'PostController@index');
 Route::group(['prefix' => 'users'], function() {
 
    Route::get('/', 'UserController@index');
+   Route::get('/image/{user}', 'UserController@getImage');
 
    Route::group(['middleware' => 'auth'], function() {
+
        Route::get('/{user}', 'UserController@show');
        Route::post('/create', 'UserController@create');
+       Route::post('/avatar', 'UserController@addImage');
        Route::get('/update/{user}', 'UserController@update');
        Route::post('/update/{user}', 'UserController@update');
        Route::post('/delete/{user}', 'UserController@delete');
+
    });
 });
 
