@@ -48,7 +48,10 @@ $factory->define(App\Job::class, function(Faker\Generator $faker) {
         'slug' => str_slug($title),
         'start_date' => $faker->dateTimeThisYear,
         'end_date' => $faker->dateTimeThisYear,
-        'user_id' => App\User::admins()->active()->get()->random()->id
+        'user_id' => function() {
+            return App\User::admins()->active()->get()->random()->id ?? null;
+        }
+
     ];
 });
 
@@ -74,3 +77,17 @@ $factory->define(App\Tool::class, function(Faker\Generator $faker) {
         'user_id' => App\User::admins()->active()->get()->random()->id
     ];
 });
+
+$factory->define(App\Document::class, function(Faker\Generator $faker) {
+    return [
+        'filename' => $faker->userName,
+        'active' => 1,
+        'path' => $faker->imageUrl(),
+        'documentable_id' => function() {
+            return factory(App\User::class)->create()->id;
+        },
+        'documentable_type' => 'App\User'
+    ];
+}, 'avatar');
+
+

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\UsersRepo;
 use Illuminate\Http\Request;
+use App\User;
 
 class UserController extends Controller
 {
@@ -58,6 +59,21 @@ class UserController extends Controller
         }
 
         return $this->cantDoThis();
+    }
+
+    public function addImage(Request $request)
+    {
+        $filter = $request->only(['id', 'image']);
+
+        return $this->usersRepo->addImage($filter['id'], $filter['image']);
+
+    }
+
+    public function getImage(User $user)
+    {
+        $img = $user->avatar ? $user->avatar->url : null;
+
+        return $img;
     }
 
 }

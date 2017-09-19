@@ -1,9 +1,11 @@
 <?php
 
-namespace Tests\Features;
+namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use Illuminate\Http\UploadedFile;
 
 class UserTest extends TestCase {
 
@@ -24,5 +26,19 @@ class UserTest extends TestCase {
         ]);
 
         $this->assertDatabaseHas('users', ['email' => $user->email]);
+    }
+
+    public function test_image_upload()
+    {
+        \Storage::fake('avatars');
+        $user = $this->createNewLoggedInUser();
+
+        $this->post('/users/avatar', [
+            'id' => $user->id,
+            'image' => UploadedFile::fake()->image('avatar.jpg')
+        ]);
+
+        \Storage::disk('avatars')->assertExists($user->id . '/avatar.jpg');
+        $this->get('users/image/' . $user->id)->assertSee('avatar.jpg');
     }
 }

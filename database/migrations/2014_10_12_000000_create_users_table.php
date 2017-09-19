@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('postcode')->nullable();
             $table->string('city')->nullable();
             $table->string('phone')->nullable();
-            $table->string('image')->nullable();
             $table->string('job_title')->nullable();
             $table->enum('type', ['admin', 'visitor', 'headhunter']);
             $table->unsignedTinyInteger('active');

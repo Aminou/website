@@ -48,6 +48,11 @@ class User extends Authenticatable implements ActiveContract
         return $this->hasMany(Tool::class);
     }
 
+    public function image()
+    {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
     /*
      * Checks
      */
@@ -98,5 +103,10 @@ class User extends Authenticatable implements ActiveContract
     public function getNameAttribute()
     {
         return $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function getAvatarAttribute()
+    {
+        return $this->image ? $this->image->first() : null;
     }
 }
