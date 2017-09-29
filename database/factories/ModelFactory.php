@@ -49,7 +49,9 @@ $factory->define(App\Job::class, function(Faker\Generator $faker) {
         'start_date' => $faker->dateTimeThisYear,
         'end_date' => $faker->dateTimeThisYear,
         'user_id' => function() {
-            return App\User::admins()->active()->get()->random()->id ?? null;
+            return factory(App\User::class)->create([
+                'type' => 'admin'
+            ])->id;
         }
 
     ];
