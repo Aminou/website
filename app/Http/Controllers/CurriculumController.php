@@ -14,23 +14,11 @@ class CurriculumController extends Controller
         $this->data['tools'] = $user->tools;
         $this->data['jobseeker'] = $user;
 
-        return $this->getView();
+        return $this->view('cv');
     }
 
     public function myCuriculum(UsersRepo $repo)
     {
-        $me = $repo->find(1);
-
-        $this->data['jobs'] = $me->jobs;
-        $this->data['skills'] = $me->skills;
-        $this->data['tools'] = $me->tools;
-        $this->data['jobseeker'] = $me;
-
-        return $this->getView();
-    }
-
-    public function getView()
-    {
-        return $this->view('cv');
+       return $this->index($repo->find(1));
     }
 }

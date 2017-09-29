@@ -19,9 +19,11 @@ class PostController extends Controller
 
     public function index(PostFilters $filters)
     {
-        $this->data['posts'] = $this->repo->query()->live()->filter($filters)->get();
+        $this->setTitle('Posts');
 
-        return View::make('home', $this->data);
+        $posts = $this->repo->query()->live()->filter($filters)->get();
+
+        return $this->view('home', ['posts' => $posts] );
     }
 
     /**
@@ -57,8 +59,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $this->data['post'] = $post;
-        return $this->view('template.post');
+        $this->setTitle($post->title);
+
+        return $this->view('post', ['post' => $post]);
     }
 
     /**

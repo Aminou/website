@@ -23,8 +23,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        $this->data['jobs'] = $this->repo->all();
-        return View::make('jobs', $this->data);
+        return $this->view('jobs', ['jobs' => $this->repo->all()]);
     }
 
     /**
@@ -34,7 +33,8 @@ class JobController extends Controller
      */
     public function create()
     {
-        //
+        $this->setTitle('Add a job');
+        return $this->view('admin.jobs.create');
     }
 
     /**
@@ -45,7 +45,17 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only([
+           'title', 'job_title', 'company', 'url', 'start_date', 'end_date', 'type', 'description'
+        ]);
+
+        $data['user_id'] = $this->loggedUser()->id;
+
+        $job = $this->repo->create($data);
+
+        $this->setTitle($job->title);
+
+        return $this->view('job', ['job' => $job]);
     }
 
     /**
@@ -56,21 +66,20 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $this->data['job'] = $job;
         $this->setTitle($job->slug);
 
-        return $this->view('job');
+        return $this->view('job', ['job' => $job]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Job  $job
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Job $job)
     {
-        //
+
     }
 
     /**
@@ -93,6 +102,6 @@ class JobController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->repo->delete($id);
     }
 }

@@ -10,4 +10,12 @@ class JobsRepo extends BaseRepository
     {
         parent::__construct($model);
     }
+
+    public function create(array $data)
+    {
+        $data['active'] = 1;
+        $data['slug'] = str_slug($data['title']);
+
+        return parent::create($data);
+    }
 }

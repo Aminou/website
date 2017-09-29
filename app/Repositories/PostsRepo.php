@@ -17,6 +17,11 @@ class PostsRepo extends BaseRepository
         return $this->query()->filter($filter)->get();
     }
 
+    public function latest()
+    {
+        return $this->query()->latest('published_at')->limit(10)->get();
+    }
+
     public function publish($id)
     {
         return $this->_updatePublishedState($id, Carbon::now());
