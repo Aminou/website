@@ -42,12 +42,24 @@ Route::group(['prefix' => 'posts'], function() {
 
 Route::group(['prefix' => 'jobs'], function() {
    Route::get('/', 'JobController@index');
-
    Route::get('/{job}', 'JobController@show');
 });
 
 Route::get('cv', 'CurriculumController@myCuriculum');
 Route::get('cv/{user}', 'CurriculumController@index');
+
+
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
+
+    Route::get('/', 'AdminController@index');
+
+    Route::group(['prefix' => 'job'], function() {
+        Route::get('create', 'JobController@create');
+        Route::post('create', 'JobController@store');
+        Route::post('update/{job}', 'JobController@update');
+    });
+
+});
 
 
 
