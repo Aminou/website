@@ -22,11 +22,9 @@ abstract class Filters
 
         $this->getFilters()
              ->filter(function($filter) {
-                    return $this->filterExists($filter);
-
-             })
-             ->each(function($filter, $value) {
-                    $this->$filter($value);
+                 return $this->filterExists($filter);
+             })->each(function($filter, $value) {
+                 $this->$filter($value);
              });
 
         return $this->builder;
@@ -50,14 +48,11 @@ abstract class Filters
     private function setFilters()
     {
         $mirror = new ReflectionClass(static::class);
+        $filters = collect($mirror->getMethods(\ReflectionMethod::IS_PUBLIC))->map->name;
 
-        $this->filters = collect($mirror->getMethods(\ReflectionMethod::IS_PUBLIC))
-                        ->map(function($method) {
-                            return $method->name;
-                        })->reject(function($method) {
+        $this->filters = $filters->reject(function($method) {
                             return in_array($method, ['__construct', 'apply']);
-                        })->toArray();
+                         })->toArray();
     }
-
 
 }
