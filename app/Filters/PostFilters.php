@@ -4,11 +4,13 @@ namespace App\Filters;
 class PostFilters extends Filters
 {
 
-    public function author($firstname, $lastname)
+    public function author($name)
     {
-        $user = \App\User::where('firstname', $firstname)->where('lastname', $lastname)->first();
+        $user = \App\User::where('firstname', $name)
+                         ->orWhere('lastname', $name)
+                         ->get();
 
-        return $this->builder->where('user_id', $user->id);
+        return $this->builder->whereIn('user_id', $user->map->id);
     }
 
     public function by($user_id)
