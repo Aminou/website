@@ -41,4 +41,12 @@ class UserTest extends TestCase {
         \Storage::disk('avatars')->assertExists($user->id . '/avatar.jpg');
         $this->get('users/image/' . $user->id)->assertSee('avatar.jpg');
     }
+
+    public function test_admin_has_access_to_backoffice()
+    {
+        $user = $this->createNewLoggedInUser('admin');
+
+        $this->get('admin')
+             ->assertSee('Fellow Admin');
+    }
 }

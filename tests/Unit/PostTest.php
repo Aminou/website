@@ -7,23 +7,24 @@ use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Post;
-use DB;
 
 class PostTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function createPost($user_id)
+    protected function createPost($params, $method = 'create')
     {
-        $params = (null !== $user_id) ? ['user_id' => $user_id] : [];
-        return factory(Post::class)->create($params);
+        if ( ! in_array($method, ['create', 'make', 'raw']))
+            return null;
+
+        return factory(Post::class)->$method($params);
     }
 
     public function test_if_a_user_can_create_post()
     {
         $user = $this->createNewLoggedInUser('admin');
 
-        $post = factory(Post::class)->raw(['user_id' => $user->getKey()]);
+        $post = $this->createPost(['user_id' => $user->getKey()], 'raw');
 
         $this->post('/posts/create', $post);
 
@@ -36,7 +37,7 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser();
 
-        $post = factory(Post::class)->raw(['user_id' => $user->getKey()]);
+        $post = $this->createPost(['user_id' => $user->getKey()], 'raw');
 
         $this->expectException('App\Exceptions\CantDoThisException');
         $this->post('/posts/create', $post);
@@ -47,7 +48,7 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser();
 
-        $post = factory(Post::class)->create([
+        $post = $this->createPost([
             'user_id' => $user->getKey()
         ]);
 
@@ -64,9 +65,9 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser();
 
-        $post = factory(Post::class)->create([
+        $post = $this->createPost([
             'user_id' => function() {
-                return factory('App\User')->create(['type' => 'admin'])->id;
+                return $this->createUser(['type' => 'admin'])->id;
             }
         ]);
 
@@ -80,7 +81,7 @@ class PostTest extends TestCase
     public function test_if_we_can_create_a_post_if_were_not_logged()
     {
         $user = factory('App\User')->create();
-        $post = factory(Post::class)->raw(['user_id' => $user->id]);
+        $post = $this->createPost(['user_id' => $user->id], 'raw');
 
         $this->expectException(AuthenticationException::class);
         $this->post('/posts/create', $post);
@@ -91,7 +92,7 @@ class PostTest extends TestCase
     {
         $user = $this->createNewLoggedInUser();
 
-        $post = factory(Post::class)->create([
+        $post = $this->createPost([
             'user_id' => $user->getKey(),
             'published_at' => null
         ]);
@@ -101,6 +102,18 @@ class PostTest extends TestCase
         $this->assertTrue($post->fresh()->isPublished());
     }
 
+    public function test_filters_by_author_name()
+    {
+        $user = $this->createNewLoggedInUser();
+        $post = factory(Post::class, 10)->create([
+            'user_id' => $user->getKey(),
+            'active' => 1
+        ]);
+
+        $this->get('/posts/?author=' . $user->firstname)
+            ->assertSee($post->random()->title);
+
+    }
 
     public function test_filters_by_author_id()
     {
