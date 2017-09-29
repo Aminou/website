@@ -11,7 +11,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class Controller extends BaseController
+abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -19,37 +19,49 @@ class Controller extends BaseController
     protected $title;
     protected $user;
 
-    protected function loggedUser() : \App\User
+    protected function loggedUser()
     {
         return Auth::user();
     }
 
     protected function setUser() : void
     {
-        $this->data['user'] = $this->loggedUser();
+        $this->addDataToView(['user' =>  $this->loggedUser()]);
     }
 
     protected function setTitle($title) : void
     {
-        $this->data['title'] = $title;
+        $this->addDataToView(['title' => $title]);
     }
 
     protected function setDescription($description = '') : void
     {
-        $this->data['description'] = $description;
+        $this->addDataToView(['description' => $description]);
     }
 
-    public function view($viewName)
+    public function view($viewName, array $additionnalData = [])
     {
+        $this->addDataToView($additionnalData);
+        $this->setUser();
+
         return View::make($viewName, $this->data);
     }
 
-    public function cantDoThis() : string
+    protected function addDataToView(array $data = []) : void
+    {
+        if (!empty($data) && is_array($data)) {
+            foreach ($data as $key => $value) {
+                $this->data[$key] = $value;
+            }
+        }
+    }
+
+    protected function cantDoThis() : CantDoThisException
     {
         throw new CantDoThisException;
     }
 
-    public function errorWhenTryingToDelete()
+    protected function errorWhenTryingToDelete() : CouldNotDeleteException
     {
         return new CouldNotDeleteException;
     }
