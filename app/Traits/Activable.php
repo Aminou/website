@@ -20,20 +20,21 @@ trait Activable
 
     public function activate()
     {
-        $this->active = self::$status['active'];
-
-        return $this->save();
+        $this->update(['active' => self::$status['active']]);
     }
 
     public function disable()
     {
-        $this->active = self::$status['disabled'];
-
-        return $this->save();
+        $this->update(['active' => self::$status['disabled']]);
     }
 
     public function isActive()
     {
         return $this->active === self::$status['active'];
+    }
+
+    public function isDisabled()
+    {
+        return ! $this->isActive();
     }
 }
