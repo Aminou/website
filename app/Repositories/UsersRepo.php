@@ -1,9 +1,9 @@
 <?php
 namespace App\Repositories;
 
+use Storage;
 use App\User;
 use Illuminate\Http\UploadedFile;
-use Storage;
 
 class UsersRepo extends BaseRepository
 {
@@ -12,25 +12,21 @@ class UsersRepo extends BaseRepository
         parent::__construct($model);
     }
 
-    public function createUser($data)
+    public function addAvatar($user_id, UploadedFile $image)
     {
-        return $this->create($data);
-    }
-
-    public function addImage($id, UploadedFile $image)
-    {
-        $user = $this->find($id);
+        $user = $this->find($user_id);
 
         if (null !== $user) {
             $file = Storage::disk('avatars')->putFileAs($user->id, $image, $image->name);
-            $document = $this->saveToDB($file, $user);
+
+            return $this->saveDocumentToDB($file, $user);
         }
 
+        return false;
     }
 
-    public function saveToDB($file, User $owner)
+    public function saveDocumentToDB($file, User $owner)
     {
-
         $path = 'public/users';
 
         return $owner->image()->create([
@@ -38,6 +34,19 @@ class UsersRepo extends BaseRepository
             'filename' => $file,
             'active' => 1
         ]);
+    }
+
+    public function getAvatar($user_id)
+    {
+        $user = $this->find($user_id);
+        $filename = optional($user->image->first())->filename;
+
+        if (Storage::disk('avatars')->exists($filename)) {
+            return $filename;
+        }
+
+        //return default image if no avatar
+        return 'default.jpg';
     }
 
 }
