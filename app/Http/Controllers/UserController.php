@@ -65,7 +65,7 @@ class UserController extends Controller
     {
         $filter = $request->only(['id', 'image']);
 
-        return $this->usersRepo->addImage($filter['id'], $filter['image']);
+        return $this->usersRepo->addAvatar($filter['id'], $filter['image']);
 
     }
 

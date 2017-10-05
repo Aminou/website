@@ -4,7 +4,7 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class BaseRepository
+abstract class BaseRepository
 {
     protected $model;
 
