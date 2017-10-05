@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 
 class UserTest extends TestCase
 {
@@ -50,9 +51,7 @@ class UserTest extends TestCase
 
     public function test_if_a_user_is_activable()
     {
-        $user = $this->createUser([
-           'active' => 0
-        ]);
+        $user = $this->createUser(['active' => 0]);
 
         $user->activate();
 
@@ -60,8 +59,21 @@ class UserTest extends TestCase
 
         $user->disable();
 
-        $this->assertFalse($user->fresh()->isActive());
+        $this->assertTrue($user->fresh()->isDisabled());
     }
+
+    /** @test **/
+    public function it_checks_if_a_user_has_an_avatar()
+    {
+        $user = $this->createNewLoggedInUser();
+        $this->repo->addAvatar($user->id, UploadedFile::fake()->image('avatar.jpg'));
+        $image = $this->repo->getAvatar($user->id);
+
+        $this->assertFileExists('storage/app/public/users/'. $image);
+    }
+    
+
+
 
 
 

@@ -26,4 +26,5 @@ class CuriculumTest extends TestCase
              ->assertSuccessful()
              ->assertSeeText($user->firstname);
     }
+
 }
