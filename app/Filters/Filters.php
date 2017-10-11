@@ -3,56 +3,40 @@ namespace App\Filters;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use \ReflectionClass;
 
 abstract class Filters
 {
     protected $request, $builder;
-    private $filters = [];
 
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->setFilters();
     }
 
     public function apply($query)
     {
         $this->builder = $query;
 
-        $this->getFilters()
-             ->filter(function($filter) {
-                 return $this->filterExists($filter);
-             })->each(function($filter, $value) {
-                 $this->$filter($value);
-             });
+        $this->filters()->each(function($filter, $value) {
+            $this->$filter($value);
+        });
 
         return $this->builder;
     }
 
-    protected function filter($filter, array $value = [])
+    private function filters() : Collection
     {
-        return $this->builder->$filter($value);
+        return collect($this->request->only($this->getFiltersFromChildClass()))->flip();
     }
 
-    private function getFilters() : Collection
+    private function getFiltersFromChildClass()
     {
-        return collect($this->request->only($this->filters))->flip();
-    }
+        $mirror = new \ReflectionClass(static::class);
+        $child_methods = collect($mirror->getMethods(\ReflectionMethod::IS_PUBLIC));
 
-    private function filterExists($filter) : bool
-    {
-        return method_exists($this, $filter);
-    }
-
-    private function setFilters()
-    {
-        $mirror = new ReflectionClass(static::class);
-        $filters = collect($mirror->getMethods(\ReflectionMethod::IS_PUBLIC))->map->name;
-
-        $this->filters = $filters->reject(function($method) {
-                            return in_array($method, ['__construct', 'apply']);
-                         })->toArray();
+        return $child_methods->map->name->reject(function($method) {
+               return in_array($method, ['__construct', 'apply']);
+        })->toArray();
     }
 
 }

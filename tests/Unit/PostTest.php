@@ -140,7 +140,21 @@ class PostTest extends TestCase
         $this->get('/posts/?year=' . $date->year)
             ->assertStatus(200)
             ->assertSee($posts->random()->title);
+    }
 
+    /** @test **/
+    public function it_tries_to_filter_post_with_an_unknown_filter()
+    {
+        $date = Carbon::createFromDate(2015, random_int(1, 12), random_int(1, 12));
+
+        $posts = factory(Post::class, 10)->create([
+            'active' => 1,
+            'published_at' => $date
+        ]);
+
+        $this->get('/posts/?year=' . $date->year . '&unknown_filter=10')
+            ->assertStatus(200)
+            ->assertSee($posts->random()->title);
     }
 
     public function test_cant_see_posts_filtered()
