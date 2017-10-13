@@ -124,7 +124,7 @@ class PostTest extends TestCase
             'active' => 1
         ]);
 
-        $this->get('/posts/?author=' . $user->lastname . ' ' . $user->firstname)
+        $this->get('/posts/filters/author/' . $user->lastname . ' ' . $user->firstname)
             ->assertSee($post->random()->title);
     }
 
@@ -138,7 +138,7 @@ class PostTest extends TestCase
             'active' => 1
         ]);
 
-        $this->get('/posts/?author=Gregory Marshall')
+        $this->get('/posts/filters/author/Gregory Marshall')
              ->assertSuccessful();
     }
 
@@ -153,7 +153,7 @@ class PostTest extends TestCase
             'active' => 1
         ]);
 
-        $this->get('/posts/?author=' . $user->firstname. ' ' . $user->lastname. ' blabla')
+        $this->get('/posts/filters/author/' . $user->firstname. ' ' . $user->lastname. ' blabla')
             ->assertSuccessful()
             ->assertSeeText($post->random()->title);
     }
@@ -167,7 +167,7 @@ class PostTest extends TestCase
             'active' => 1
         ]);
 
-        $this->get('/posts/?by=' . $user->id)
+        $this->get('/posts/filters/by/' . $user->id)
              ->assertSee($post->random()->title);
     }
 
@@ -180,7 +180,7 @@ class PostTest extends TestCase
             'published_at' => $date
         ]);
 
-        $this->get('/posts/?year=' . $date->year)
+        $this->get('/posts/filters/year/' . $date->year)
             ->assertStatus(200)
             ->assertSee($posts->random()->title);
     }
@@ -193,7 +193,7 @@ class PostTest extends TestCase
             'published_at' => Carbon::now()
         ]);
 
-        $this->get('/posts/?unknownFilter=10')
+        $this->get('/posts/filters/unknownFilter/10')
             ->assertStatus(200)
             ->assertSee($posts->random()->title);
     }
@@ -213,7 +213,7 @@ class PostTest extends TestCase
             'published_at' => $right_date
         ]);
 
-        $this->get('/posts/?year=' . $right_date->year)
+        $this->get('/posts/filters/year/' . $right_date->year)
              ->assertSee($newer_posts->random()->title)
              ->assertDontSeeText($older_posts->random()->title);
 
@@ -239,7 +239,7 @@ class PostTest extends TestCase
            }
         ]);
 
-        $this->get('/posts/?year=' . $date->year . '&by=' . $owner->id)
+        $this->get('/posts/filters/year/' . $date->year . '/by/' . $owner->id)
              ->assertSee($posts->random()->title)
              ->assertDontSee($bad_post->random()->title);
     }

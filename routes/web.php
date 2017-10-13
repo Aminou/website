@@ -23,8 +23,9 @@ Route::group(['prefix' => 'users'], function() {
 
 Route::group(['prefix' => 'posts'], function() {
 
-   Route::get('/', 'PostController@index');
-   Route::get('/{post}', 'PostController@show');
+    Route::get('/{post}', 'PostController@show');
+   Route::get('/{filters?}/{filter_value?}', 'PostController@index')->where('filter_value', '.+');
+
 
    Route::group(['middleware' => 'auth'], function() {
 

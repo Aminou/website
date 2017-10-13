@@ -1,32 +1,52 @@
 <?php
 namespace App\Filters;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 abstract class Filters
 {
-    protected $request, $builder;
+    protected $params, $builder;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
+        $this->params = $this->setFilters();
     }
 
     public function apply($query)
     {
         $this->builder = $query;
 
-        $this->filters()->each(function($filter, $value) {
-            $this->$filter($value);
-        });
+        if ($this->params->count() > 0) {
+            $this->filters()->each(function ($filter, $value) {
+                $this->$filter($value);
+            });
+        }
 
         return $this->builder;
     }
 
+    private function setFilters()
+    {
+        $request = request();
+
+        if ($request->segment(2) === 'filters') {
+            $segments = collect($request->segments())->slice(2);
+
+            $filters = $segments->nth(2);
+            $values = $segments->nth(2, 1);
+
+            return $filters->combine($values);
+        }
+
+        return collect();
+
+    }
+
     private function filters() : Collection
     {
-        return collect($this->request->only($this->getFiltersFromChildClass()))->flip();
+        return $this->params->filter(function ($value, $key) {
+            return in_array($key, $this->getFiltersFromChildClass());
+        })->flip();
     }
 
     private function getFiltersFromChildClass()
