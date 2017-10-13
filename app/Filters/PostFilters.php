@@ -1,14 +1,27 @@
 <?php
 namespace App\Filters;
 
+use App\User;
+
 class PostFilters extends Filters
 {
 
     public function author($name)
     {
-        $user = \App\User::where('firstname', $name)
-                         ->orWhere('lastname', $name)
-                         ->get();
+        if (strpos($name, ' ') !== false) {
+
+            [$firstname, $lastname] = explode(' ', $name);
+            
+            $user = User::where('firstname', $firstname)->orWhere('lastname', $firstname)
+                        ->where('lastname', $lastname)->orWhere('firstname', $lastname)
+                        ->get();
+
+            return $this->builder->whereIn('user_id', $user->map->id);
+        }
+
+        $user = User::where('firstname', $name)
+                        ->orWhere('lastname', $name)
+                        ->get();
 
         return $this->builder->whereIn('user_id', $user->map->id);
     }

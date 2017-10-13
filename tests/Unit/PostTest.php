@@ -14,8 +14,9 @@ class PostTest extends TestCase
 
     protected function createPost($params, $method = 'create')
     {
-        if ( ! in_array($method, ['create', 'make', 'raw']))
+        if ( ! in_array($method, ['create', 'make', 'raw'])) {
             return null;
+        }
 
         return factory(Post::class)->$method($params);
     }
@@ -110,9 +111,51 @@ class PostTest extends TestCase
             'active' => 1
         ]);
 
-        $this->get('/posts/?author=' . $user->firstname)
+        $this->get('/posts/?author=' . $user->firstname . ' ' . $user->lastname)
             ->assertSee($post->random()->title);
+    }
 
+    /** @test **/
+    public function it_test_the_author_filter_with_a_reversed_name()
+    {
+        $user = $this->createNewLoggedInUser();
+        $post = factory(Post::class, 10)->create([
+            'user_id' => $user->getKey(),
+            'active' => 1
+        ]);
+
+        $this->get('/posts/?author=' . $user->lastname . ' ' . $user->firstname)
+            ->assertSee($post->random()->title);
+    }
+
+    /** @test **/
+    public function it_tries_to_filter_with_an_unknown_author_name()
+    {
+        $user = $this->createNewLoggedInUser();
+
+        $post = factory(Post::class, 10)->create([
+            'user_id' => $user->getKey(),
+            'active' => 1
+        ]);
+
+        $this->get('/posts/?author=Gregory Marshall')
+             ->assertSuccessful();
+    }
+
+    /** @test **/
+    public function it_test_the_author_filter_if_it_has_3_words()
+    {
+        // test starts here.
+        $user = $this->createNewLoggedInUser();
+
+        $post = factory(Post::class, 10)->create([
+            'user_id' => $user->getKey(),
+            'active' => 1
+        ]);
+
+        $this->get('/posts/?author=' . $user->firstname. ' ' . $user->lastname. ' blabla')
+            ->assertSuccessful()
+            ->assertSeeText($post->random()->title);
     }
 
     public function test_filters_by_author_id()
@@ -145,14 +188,12 @@ class PostTest extends TestCase
     /** @test **/
     public function it_tries_to_filter_post_with_an_unknown_filter()
     {
-        $date = Carbon::createFromDate(2015, random_int(1, 12), random_int(1, 12));
-
         $posts = factory(Post::class, 10)->create([
             'active' => 1,
-            'published_at' => $date
+            'published_at' => Carbon::now()
         ]);
 
-        $this->get('/posts/?year=' . $date->year . '&unknown_filter=10')
+        $this->get('/posts/?unknownFilter=10')
             ->assertStatus(200)
             ->assertSee($posts->random()->title);
     }
