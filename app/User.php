@@ -2,10 +2,10 @@
 
 namespace App;
 
+use App\Traits\Activable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Contracts\Activable as ActiveContract;
-use App\Traits\Activable;
 
 class User extends Authenticatable implements ActiveContract
 {

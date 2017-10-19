@@ -38,8 +38,7 @@ class UsersRepo extends BaseRepository
 
     public function getAvatar($user_id)
     {
-        $user = $this->find($user_id);
-        $filename = optional($user->image->first())->filename;
+        $filename = optional($this->find($user_id)->image->first())->filename;
 
         if (Storage::disk('avatars')->exists($filename)) {
             return $filename;

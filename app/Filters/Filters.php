@@ -2,13 +2,15 @@
 namespace App\Filters;
 
 use Illuminate\Support\Collection;
+use Illuminate\Http\Request;
 
 abstract class Filters
 {
-    protected $params, $builder;
+    protected $params, $builder, $request;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+        $this->request = $request;
         $this->params = $this->setFilters();
     }
 
@@ -25,12 +27,11 @@ abstract class Filters
         return $this->builder;
     }
 
-    private function setFilters()
+    private function setFilters() : Collection
     {
-        $request = request();
+        if ($this->request->segment(2) === 'filters') {
 
-        if ($request->segment(2) === 'filters') {
-            $segments = collect($request->segments())->slice(2);
+            $segments = collect($this->request->segments())->slice(2);
 
             $filters = $segments->nth(2);
             $values = $segments->nth(2, 1);
@@ -44,12 +45,14 @@ abstract class Filters
 
     private function filters() : Collection
     {
-        return $this->params->filter(function ($value, $key) {
-            return in_array($key, $this->getFiltersFromChildClass());
+        $filters = $this->getFiltersFromChildClass();
+
+        return $this->params->filter(function ($value, $key) use ($filters) {
+            return in_array($key, $filters);
         })->flip();
     }
 
-    private function getFiltersFromChildClass()
+    private function getFiltersFromChildClass() : array
     {
         $mirror = new \ReflectionClass(static::class);
         $child_methods = collect($mirror->getMethods(\ReflectionMethod::IS_PUBLIC));

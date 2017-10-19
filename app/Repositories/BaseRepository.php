@@ -91,10 +91,14 @@ abstract class BaseRepository
         return $this->find($id)->delete();
     }
 
-
     public function getLastUpdate($id)
     {
         return $this->find($id)->updated_at->diffForHumans();
+    }
+
+    public function getCreationDate($id)
+    {
+        return $this->find($id)->created_at->diffForHumans();
     }
 
 }

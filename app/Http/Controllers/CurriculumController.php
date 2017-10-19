@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\UsersRepo;
 use App\User;
+use App\Repositories\UsersRepo;
 
 class CurriculumController extends Controller
 {
     public function index(User $user)
     {
-        $this->data['jobs'] = $user->jobs;
-        $this->data['skills'] = $user->skills;
-        $this->data['tools'] = $user->tools;
-        $this->data['jobseeker'] = $user;
-
-        return $this->view('cv');
+        return $this->view('cv', [
+            'jobs' => $user->jobs,
+            'skills' => $user->skills,
+            'tools' => $user->tools,
+            'jobseeker' => $user
+        ]);
     }
 
     public function myCuriculum(UsersRepo $repo)

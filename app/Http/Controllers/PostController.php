@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use Illuminate\Http\Request;
 use App\Repositories\PostsRepo;
 use App\Filters\PostFilters;
-use App\Post;
-use View;
 
 class PostController extends Controller
 {
