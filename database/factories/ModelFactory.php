@@ -11,6 +11,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'address' => $faker->streetAddress,
         'city' => $faker->city,
         'postcode' => $faker->postcode,
+        'about_me' => $faker->text(200),
         'password' => $password ?: $password = bcrypt('secret'),
         'type' => 'visitor',
         'active' => 1,

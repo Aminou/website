@@ -44,6 +44,7 @@ class UsersSeeder extends Seeder
            'active' => 0
         ]);
     }
+
     public function createMyAccount() : void
     {
         factory(User::class)->create([
