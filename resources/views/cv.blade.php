@@ -5,11 +5,10 @@
 
     <section class="myself">
 
+        <div class="img"><img src="{{ optional($user->avatar)->url }}" alt="{{ $jobseeker->name }}" /></div>
         <h1>{{ $jobseeker->name }}</h1>
 
-        <p>
-            {{ $jobseeker->job_title }}
-        </p>
+        <h2>{{ $jobseeker->job_title }}</h2>
 
         <div class="address">
             {{ $jobseeker->address }}
@@ -21,6 +20,13 @@
         </div>
 
     </section>
+
+@if($jobseeker->about_me)
+    <section class="about">
+        <p>{{ $jobseeker->about_me }}</p>
+    </section>
+@endif
+
 
 @if($jobs)
     <section class="jobs">
