@@ -13,8 +13,6 @@ Route::group(['prefix' => 'users'], function() {
        Route::get('/{user}', 'UserController@show');
        Route::post('/create', 'UserController@create');
        Route::post('/avatar', 'UserController@addImage');
-       Route::get('/update/{user}', 'UserController@update');
-       Route::post('/update/{user}', 'UserController@update');
        Route::post('/delete/{user}', 'UserController@delete');
    });
 });
@@ -58,6 +56,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
         Route::get('create', 'JobController@create');
         Route::post('create', 'JobController@store');
         Route::post('update/{job}', 'JobController@update');
+    });
+
+    Route::group(['prefix' => 'users'], function() {
+        Route::get('/update/{user}', 'UserController@edit');
+        Route::post('/update/{user}', 'UserController@store');
     });
 
 });
