@@ -29,12 +29,23 @@ class UserController extends Controller
         return $this->cantDoThis();
     }
 
-
-    public function edit(User $user)
+    public function store(Request $request, User $user)
     {
 
         if ($this->loggedUser()->can('update', $user)) {
-            return $user;
+            $this->usersRepo->update($user->id, $request->all());
+
+           return redirect('/admin/users/update/' . $user->id);
+        }
+
+        return $this->cantDoThis();
+    }
+
+
+    public function edit(User $user)
+    {
+        if ($this->loggedUser()->can('update', $user)) {
+            return $this->view('admin.users.create', ['user' => $user]);
         }
 
         return $this->cantDoThis();
@@ -71,9 +82,7 @@ class UserController extends Controller
 
     public function getImage(User $user)
     {
-        $img = $user->avatar ? $user->avatar->url : null;
-
-        return $img;
+        return $user->avatar ? $user->avatar->url : null;
     }
 
 }

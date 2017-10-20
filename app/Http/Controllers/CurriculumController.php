@@ -21,4 +21,7 @@ class CurriculumController extends Controller
     {
        return $this->index($repo->find(1));
     }
+
+
+
 }
