@@ -12,35 +12,38 @@
 
                 <div class="col-md-5">
 
+                    @php
+                        echo bootstrap_input('text', 'title', null, false, true)
+                    @endphp
+
                     <div class="form-group">
                         <input class="form-control" type="text" placeholder="Title" name="title" required
-                        @if($job) value="{{ $job->title }}"@endif
-                        >
+                        value="{{ $job->title or null }}">
                     </div>
 
                     <div class="form-group">
                         <input class="form-control" type="text" placeholder="Position" name="job_title" required
-                        @if($job) value="{{ $job->job_title }}"@endif>
+                        value="{{ $job->job_title or null }}">
                     </div>
 
                     <div class="form-group">
                         <input class="form-control" type="text" placeholder="Company" name="company" required
-                        @if($job) value="{{ $job->company }}"@endif>
+                        value="{{ $job->company or null }}">
                     </div>
 
                     <div class="form-group">
                         <input class="form-control" type="text" placeholder="Url" name="url"
-                        @if($job) value="{{ $job->url }}"@endif>
+                        value="{{ $job->url or null }}">
                     </div>
 
                     <div class="form-group">
                         <input class="form-control" type="date" placeholder="Start date" name="start_date"
-                         @if($job) value="{{ $job->start_date }}"@endif>
+                         value="{{ $job->start_date or null }}">
                     </div>
 
                     <div class="form-group">
                         <input class="form-control" type="date" placeholder="End date" name="end_date"
-                        @if($job) value="{{ $job->end_date }}"@endif>
+                        value="{{ $job->end_date or null }}">
                     </div>
 
                     <div class="form-group">
@@ -72,7 +75,7 @@
                 <div class="col-md-7">
                     <div class="form-group pl4">
                         <textarea class="form-control" placeholder="Description" rows="12" name="description">
-                            @if($job) {{ $job->description }} @endif
+                           {{ $job->description or null }}
                         </textarea>
                     </div>
                 </div>
