@@ -13,7 +13,7 @@ before_script:
   - php artisan migrate --seed
   - npm install --global gulp-cli
   - npm install
-  - gulp --production
+  - npm production
 
 script:
   - vendor/bin/phpunit
