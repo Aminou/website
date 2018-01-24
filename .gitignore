@@ -17,7 +17,6 @@ readme.md
 .DS_Store
 bootstrap/cache/services.php
 
-composer.json
 _ide_helper.php
 .phpstorm.meta.php
 phpunit.phar
